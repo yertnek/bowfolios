@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:shimmer/shimmer.dart';
-import './home.dart';
+import 'home_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -14,14 +14,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
 
-    _mockCheckForSession().then((status) {
+    _appDelay().then((status) {
       if (status) {
         _navigateToHome();
       }
     });
   }
 
-  Future<bool> _mockCheckForSession() async {
+  Future<bool> _appDelay() async {
     await Future.delayed(Duration(milliseconds: 5000), () {});
 
     return true;
