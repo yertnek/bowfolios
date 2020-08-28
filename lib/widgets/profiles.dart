@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bowfolios/widgets/profile_card.dart';
 
-class ProfilesScreen extends StatelessWidget {
+class Profiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(

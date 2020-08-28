@@ -1,8 +1,8 @@
+import 'package:bowfolios/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bowfolios/widgets/main_drawer.dart';
-import 'package:bowfolios/screens/profiles_screen.dart';
-import 'package:bowfolios/screens/loading_screen.dart';
+import 'package:bowfolios/widgets/profiles.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,9 +11,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
-    ProfilesScreen(),
-    ProfilesScreen(),
-    ProfilesScreen(),
+    Profiles(),
+    LoadingScreen(),
+    Profiles(),
   ];
 
   int _selectedPageIndex = 0;
