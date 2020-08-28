@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bowfolios/widgets/main_drawer.dart';
+import 'package:bowfolios/screens/profiles_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
       ),
       drawer: MainDrawer(),
       body: Center(
-        child: Text('Need to figure out what to display on homescreen'),
+        child: ProfilesScreen(),
       ),
     );
   }
