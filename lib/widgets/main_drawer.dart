@@ -33,7 +33,7 @@ class MainDrawer extends StatelessWidget {
             alignment: Alignment.bottomLeft,
             color: Theme.of(context).primaryColor,
             child: Text(
-              'Profile',
+              'BowFolios',
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 30,
