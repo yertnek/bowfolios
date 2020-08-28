@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "702313518478",
+    "firebase_url": "https://bowfolios-2b23c.firebaseio.com",
+    "project_id": "bowfolios-2b23c",
+    "storage_bucket": "bowfolios-2b23c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702313518478:android:5f661bd7fd3d5dd8f880df",
+        "android_client_info": {
+          "package_name": "com.example.bowfolios"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702313518478-61mdabtvt38al6rn4vat3ud9l35iq2gt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBVFyUb2vr4piNwuZcbhIX4AxuLWUo_DA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702313518478-61mdabtvt38al6rn4vat3ud9l35iq2gt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
