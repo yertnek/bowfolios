@@ -1,6 +1,8 @@
+import 'package:bowfolios/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/loading_screen.dart';
+import 'screens/auth_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,9 +21,16 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'BowFolios',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: LoadingScreen(),
+          primarySwatch: Colors.green,
+          backgroundColor: Colors.green,
+          buttonTheme: ButtonTheme.of(context).copyWith(
+            buttonColor: Colors.green,
+            textTheme: ButtonTextTheme.primary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          )),
+      home: AuthScreen(),
+      //home: LoadingScreen(),
     );
   }
 }
