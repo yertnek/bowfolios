@@ -8,13 +8,24 @@ class Profiles extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.all(10),
       children: <Widget>[
-        ProfileCard('Trey Sumida', 'Student', 'I am a student at UH Manoa.'),
-        ProfileCard('Ken Tung', 'Student', 'I am a student at UH Manoa.'),
-        ProfileCard('Ken Tung', 'Student', 'I am a student at UH Manoa.'),
-        ProfileCard('Ken Tung', 'Student', 'I am a student at UH Manoa.'),
-        ProfileCard('Ken Tung', 'Student', 'I am a student at UH Manoa.'),
-        ProfileCard('Ken Tung', 'Student', 'I am a student at UH Manoa.'),
-        ProfileCard('Ken Tung', 'Student', 'I am a student at UH Manoa.'),
+        ProfileCard(
+          'Trey Sumida',
+          'Student',
+          'I am a student at UH Manoa.',
+          [
+            'Software Development',
+            'Software Engineering',
+          ],
+        ),
+        ProfileCard(
+          'Ken Tung',
+          'Student',
+          'I am a student at UH Manoa. I like to code and have fun.',
+          [
+            'Software Development',
+            'Software Engineering',
+          ],
+        ),
       ],
     );
   }

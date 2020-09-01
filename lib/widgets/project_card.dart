@@ -10,6 +10,7 @@ class ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
         children: <Widget>[
           ListTile(
