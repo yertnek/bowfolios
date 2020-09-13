@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(String title, IconData icon) {
@@ -47,6 +48,7 @@ class MainDrawer extends StatelessWidget {
           buildListTile('Profile', Icons.person),
           buildListTile('Add Project', Icons.add),
           buildListTile('Search', Icons.search),
+          buildListTile('Logout', Icons.exit_to_app),
         ],
       ),
     );
