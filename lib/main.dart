@@ -1,8 +1,15 @@
+import 'package:bowfolios/screens/auth_screen.dart';
+import 'package:bowfolios/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'screens/loading_screen.dart';
+import 'screens/auth_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -19,9 +26,25 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'BowFolios',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: LoadingScreen(),
+          primarySwatch: Colors.green,
+          backgroundColor: Colors.green,
+          buttonTheme: ButtonTheme.of(context).copyWith(
+            buttonColor: Colors.green,
+            textTheme: ButtonTextTheme.primary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          )),
+      //checks if user login exists
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, userSnapshot) {
+            //if there is user data, goes to home screen
+            if (userSnapshot.hasData) {
+              return HomeScreen();
+            }
+            //goes to auth screen if no user data/login
+            return AuthScreen();
+          }),
     );
   }
 }
