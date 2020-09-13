@@ -13,7 +13,12 @@ class _AuthScreenState extends State<AuthScreen> {
   final _auth = FirebaseAuth.instance;
 
   void _submitAuthForm(
-      String email, String password, String username, bool isLogin) async {
+    String email,
+    String password,
+    String username,
+    bool isLogin,
+    BuildContext ctx,
+  ) async {
     UserCredential authResult;
 
     try {
