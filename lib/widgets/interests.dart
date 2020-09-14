@@ -6,6 +6,7 @@ class Interests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView(
+      padding: const EdgeInsets.all(25),
       children: <Widget>[
         InterestCard('Software Development'),
         InterestCard('Software Engineering'),
