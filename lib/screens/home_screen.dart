@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bowfolios/widgets/main_drawer.dart';
 import 'package:bowfolios/widgets/profiles.dart';
 import 'package:bowfolios/widgets/projects.dart';
+import 'package:bowfolios/widgets/interests.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     Profiles(),
     Projects(),
-    Profiles(),
+    Interests(),
   ];
 
   final List headers = [
