@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MainDrawer extends StatelessWidget {
-  Widget buildListTile(String title, IconData icon) {
+  Widget buildListTile(String title, IconData icon, Function tapHandler) {
     return ListTile(
       leading: Icon(
         icon,
@@ -16,9 +16,7 @@ class MainDrawer extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      onTap: () {
-        //directs to another page
-      },
+      onTap: () {},
     );
   }
 
@@ -44,11 +42,26 @@ class MainDrawer extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          buildListTile('Home', Icons.home),
-          buildListTile('Profile', Icons.person),
-          buildListTile('Add Project', Icons.add),
-          buildListTile('Search', Icons.search),
-          buildListTile('Logout', Icons.exit_to_app),
+          buildListTile('Home', Icons.home, () {}),
+          buildListTile('Profile', Icons.person, () {}),
+          buildListTile('Add Project', Icons.add, () {}),
+          buildListTile('Search', Icons.search, () {}),
+          ListTile(
+              leading: Icon(
+                Icons.exit_to_app,
+                size: 26,
+              ),
+              title: Text(
+                'Logout',
+                style: TextStyle(
+                  fontFamily: 'RobotoCondensed',
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+              })
         ],
       ),
     );
