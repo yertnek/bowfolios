@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:bowfolios/widgets/auth/auth_form.dart';
+import 'package:bowfolios/screens/home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -13,6 +14,16 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _auth = FirebaseAuth.instance;
   var _isLoading = false;
+
+  void home(BuildContext ctx) {
+    Navigator.of(ctx).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) {
+          return HomeScreen();
+        },
+      ),
+    );
+  }
 
   void _submitAuthForm(
     String email,
@@ -66,6 +77,9 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         _isLoading = false;
       });
+    }
+    if (authResult != null) {
+      home(ctx);
     }
   }
 

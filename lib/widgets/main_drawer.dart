@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../screens/auth_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-class MainDrawer extends StatelessWidget {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MainDrawer());
+}
+
+class MainDrawer extends StatefulWidget {
+  @override
+  _MainDrawerState createState() => _MainDrawerState();
+}
+
+class _MainDrawerState extends State<MainDrawer> {
   Widget buildListTile(String title, IconData icon, Function tapHandler) {
     return ListTile(
       leading: Icon(
@@ -16,7 +29,19 @@ class MainDrawer extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      onTap: () {},
+      onTap: () {
+        tapHandler();
+      },
+    );
+  }
+
+  void login(BuildContext ctx) {
+    Navigator.of(ctx).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) {
+          return AuthScreen();
+        },
+      ),
     );
   }
 
@@ -46,22 +71,20 @@ class MainDrawer extends StatelessWidget {
           buildListTile('Profile', Icons.person, () {}),
           buildListTile('Add Project', Icons.add, () {}),
           buildListTile('Search', Icons.search, () {}),
-          ListTile(
-              leading: Icon(
-                Icons.exit_to_app,
-                size: 26,
-              ),
-              title: Text(
-                'Logout',
-                style: TextStyle(
-                  fontFamily: 'RobotoCondensed',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-              })
+          StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (ctx, userSnapshot) {
+                //if there is user data, goes to home screen
+                if (userSnapshot.hasData) {
+                  return buildListTile('Logout', Icons.exit_to_app, () {
+                    FirebaseAuth.instance.signOut();
+                  });
+                }
+                //goes to auth screen if no user data/login
+                return buildListTile('Login', Icons.exit_to_app, () {
+                  login(context);
+                });
+              }),
         ],
       ),
     );

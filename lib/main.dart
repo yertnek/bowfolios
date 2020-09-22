@@ -34,17 +34,7 @@ class _MyAppState extends State<MyApp> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           )),
-      //checks if user login exists
-      home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (ctx, userSnapshot) {
-            //if there is user data, goes to home screen
-            if (userSnapshot.hasData) {
-              return HomeScreen();
-            }
-            //goes to auth screen if no user data/login
-            return AuthScreen();
-          }),
+      home: LoadingScreen(),
     );
   }
 }
