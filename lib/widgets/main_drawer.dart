@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../screens/auth_screen.dart';
+import '../widgets/profiles.dart';
 import 'package:bowfolios/screens/home_screen.dart';
 
 void main() async {
@@ -59,6 +60,16 @@ class _MainDrawerState extends State<MainDrawer> {
     );
   }
 
+  void newPage(BuildContext ctx, Widget page) {
+    Navigator.of(ctx).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) {
+          return page;
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (FirebaseAuth.instance.currentUser != null) {
@@ -76,7 +87,9 @@ class _MainDrawerState extends State<MainDrawer> {
             SizedBox(
               height: 20,
             ),
-            buildListTile('Home', Icons.home, () {}),
+            buildListTile('Home', Icons.home, () {
+              newPage(context, HomeScreen());
+            }),
             buildListTile('Profile', Icons.person, () {}),
             buildListTile('Add Project', Icons.add, () {}),
             buildListTile('Search', Icons.search, () {}),
