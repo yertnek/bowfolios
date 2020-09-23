@@ -1,7 +1,7 @@
+import 'package:bowfolios/screens/add_project_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../screens/auth_screen.dart';
 import '../widgets/profiles.dart';
@@ -91,7 +91,9 @@ class _MainDrawerState extends State<MainDrawer> {
               newPage(context, HomeScreen());
             }),
             buildListTile('Profile', Icons.person, () {}),
-            buildListTile('Add Project', Icons.add, () {}),
+            buildListTile('Add Project', Icons.add, () {
+              newPage(context, AddProjectScreen());
+            }),
             buildListTile('Search', Icons.search, () {}),
             buildListTile('Logout', Icons.exit_to_app, () {
               logout(context);
