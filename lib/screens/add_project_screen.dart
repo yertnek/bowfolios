@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bowfolios/widgets/main_drawer.dart';
+import 'package:bowfolios/widgets/project_form.dart';
 
 class AddProjectScreen extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
         title: Text('Add Project'),
       ),
       drawer: MainDrawer(),
-      body: Text("Hello"),
+      body: ProjectForm(),
     );
   }
 }
