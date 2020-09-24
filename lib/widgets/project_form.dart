@@ -21,6 +21,12 @@ class _ProjectFormState extends State<ProjectForm> {
           content: Text("Would you like to use the camera or gallery?"),
           actions: <Widget>[
             FlatButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
               child: Text("Camera"),
               onPressed: () {
                 _pickImage(ImageSource.camera);
