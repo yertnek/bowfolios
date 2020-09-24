@@ -1,10 +1,10 @@
 import 'package:bowfolios/screens/add_project_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import '../screens/auth_screen.dart';
-import '../widgets/profiles.dart';
 import 'package:bowfolios/screens/home_screen.dart';
 
 void main() async {
@@ -19,6 +19,8 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   Widget buildListTile(String title, IconData icon, Function tapHandler) {
     return ListTile(
       leading: Icon(
@@ -72,7 +74,7 @@ class _MainDrawerState extends State<MainDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    if (FirebaseAuth.instance.currentUser != null) {
+    if (auth.currentUser != null) {
       return Drawer(
         child: Column(
           children: <Widget>[
@@ -82,7 +84,33 @@ class _MainDrawerState extends State<MainDrawer> {
               padding: EdgeInsets.all(20),
               alignment: Alignment.bottomLeft,
               color: Theme.of(context).primaryColor,
-              child: Text('Hello'),
+              child: FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(auth.currentUser.uid)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      !snapshot.hasData) {
+                    return Text(
+                      'Username loading...',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 30,
+                      ),
+                    );
+                  }
+                  final DocumentSnapshot ds = snapshot.data;
+                  final userData = ds.data();
+                  return Text(
+                    userData["username"],
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 30,
+                    ),
+                  );
+                },
+              ),
             ),
             SizedBox(
               height: 20,
