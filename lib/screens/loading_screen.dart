@@ -35,6 +35,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -46,7 +47,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               alignment: Alignment.center,
               child: Shimmer.fromColors(
                 baseColor: Color.fromARGB(1000, 12, 100, 63),
-                highlightColor: Color.fromARGB(1000, 0, 0, 0),
+                highlightColor: Colors.white,
                 child: Container(
                   child: Text(
                     "BowFolios",
