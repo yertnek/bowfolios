@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:bowfolios/widgets/project_card.dart';
 
-class Projects extends StatelessWidget {
+class Projects extends StatefulWidget {
+  @override
+  _ProjectsState createState() => _ProjectsState();
+}
+
+class _ProjectsState extends State<Projects> {
   @override
   Widget build(BuildContext context) {
     return ListView(

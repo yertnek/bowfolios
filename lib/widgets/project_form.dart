@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:bowfolios/screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -58,13 +61,14 @@ class _ProjectFormState extends State<ProjectForm> {
     });
   }
 
-  void _startUpload() {
+  void _startUpload() async {
     if (_formKey.currentState.validate() && _pickedImage != null) {
       String filePath = 'images/${DateTime.now()}.png';
       setState(() {
         _uploadTask = _storage.ref().child(filePath).putFile(_pickedImage);
       });
-      FirebaseFirestore.instance.collection('projects').add(
+
+      await FirebaseFirestore.instance.collection('projects').add(
         {
           "Name": _name,
           "Home Page": _homePage,
@@ -73,6 +77,17 @@ class _ProjectFormState extends State<ProjectForm> {
         },
       );
     }
+    await _uploadTask.onComplete;
+    Timer(
+      Duration(seconds: 3),
+      () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) {
+            return HomeScreen();
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -91,16 +106,6 @@ class _ProjectFormState extends State<ProjectForm> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (_uploadTask.isComplete) Text('Finished uploading!'),
-                if (_uploadTask.isInProgress)
-                  FlatButton(
-                    child: Icon(Icons.pause),
-                    onPressed: _uploadTask.pause,
-                  ),
-                if (_uploadTask.isInProgress)
-                  FlatButton(
-                    child: Icon(Icons.play_arrow),
-                    onPressed: _uploadTask.resume,
-                  ),
                 LinearProgressIndicator(value: progressPercent),
                 Text('${(progressPercent * 100).toStringAsFixed(2)}%'),
               ],
