@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import '../screens/auth_screen.dart';
 import 'package:bowfolios/screens/home_screen.dart';
 import 'package:bowfolios/screens/add_project_screen.dart';
+import './username.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,8 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   Widget buildListTile(String title, IconData icon, Function tapHandler) {
     return ListTile(
       leading: Icon(
@@ -71,7 +74,7 @@ class _MainDrawerState extends State<MainDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    if (FirebaseAuth.instance.currentUser != null) {
+    if (auth.currentUser != null) {
       return Drawer(
         child: Column(
           children: <Widget>[
@@ -81,10 +84,7 @@ class _MainDrawerState extends State<MainDrawer> {
               padding: EdgeInsets.all(20),
               alignment: Alignment.bottomLeft,
               color: Theme.of(context).primaryColor,
-              child: Text('Hello'),
-            ),
-            SizedBox(
-              height: 20,
+              child: Username(auth.currentUser.uid),
             ),
             buildListTile('Home', Icons.home, () {
               newPage(context, HomeScreen());
