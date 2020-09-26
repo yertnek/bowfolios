@@ -16,15 +16,12 @@ class ProjectForm extends StatefulWidget {
 
 class _ProjectFormState extends State<ProjectForm> {
   final _formKey = GlobalKey<FormState>();
+  bool _uploading = false;
   File _pickedImage;
   String _name;
   String _homePage;
   String _desc;
   var _interests = [];
-
-  final FirebaseStorage _storage =
-      FirebaseStorage(storageBucket: 'gs://bowfolios-2b23c.appspot.com');
-  StorageUploadTask _uploadTask;
 
   void _showAlertDialog(BuildContext context) async {
     return showDialog(
@@ -111,16 +108,26 @@ class _ProjectFormState extends State<ProjectForm> {
   }
 
   void _startUpload() async {
+    setState(() {
+      _uploading = true;
+    });
     String projID;
     if (_formKey.currentState.validate() && _pickedImage != null) {
-      String filePath = 'images/${DateTime.now()}.png';
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('project_image')
+          .child('${DateTime.now()}.jpg');
+
+      await ref.putFile(_pickedImage).onComplete;
+
+      final url = await ref.getDownloadURL();
 
       await FirebaseFirestore.instance.collection('projects').add(
         {
           "name": _name,
           "home Page": _homePage,
           "description": _desc,
-          "picture": filePath,
+          "picture": url,
           "created": DateTime.now()
         },
       ).then(
@@ -136,10 +143,7 @@ class _ProjectFormState extends State<ProjectForm> {
           },
         );
       }
-      setState(() {
-        _uploadTask = _storage.ref().child(filePath).putFile(_pickedImage);
-      });
-      await _uploadTask.onComplete;
+
       Timer(
         Duration(seconds: 3),
         () => Navigator.of(context).pushReplacement(
@@ -155,28 +159,7 @@ class _ProjectFormState extends State<ProjectForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (_uploadTask != null) {
-      return StreamBuilder<StorageTaskEvent>(
-        stream: _uploadTask.events,
-        builder: (ctx, snapshot) {
-          var event = snapshot?.data?.snapshot;
-          double progressPercent =
-              event != null ? event.bytesTransferred / event.totalByteCount : 0;
-          return Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (_uploadTask.isComplete) Text('Finished uploading!'),
-                LinearProgressIndicator(value: progressPercent),
-                Text('${(progressPercent * 100).toStringAsFixed(2)}%'),
-              ],
-            ),
-          );
-        },
-      );
-    } else {
+    if (!_uploading) {
       return SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(10),
@@ -260,5 +243,6 @@ class _ProjectFormState extends State<ProjectForm> {
         ),
       );
     }
+    return Text("Currently uploading data...");
   }
 }

@@ -1,21 +1,55 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ProjectCard extends StatelessWidget {
+class ProjectCard extends StatefulWidget {
   final String title;
   final String desc;
-  final Widget interestsWidget;
+  final String id;
 
-  ProjectCard(this.title, this.desc, this.interestsWidget);
+  ProjectCard(this.title, this.desc, this.id);
+
+  @override
+  _ProjectCardState createState() => _ProjectCardState();
+}
+
+class _ProjectCardState extends State<ProjectCard> {
+  final firestoreInstance = FirebaseFirestore.instance;
+  Widget _interestWidget = Icon(Icons.inbox);
+
+  void _getInterests(String projID) async {
+    List<Widget> list = new List<Widget>();
+    await firestoreInstance
+        .collection("projectsinterests")
+        .where("project", isEqualTo: projID)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        list.add(
+          new Chip(
+            label: Text(element.data()["interest"]),
+          ),
+        );
+      });
+      setState(() {
+        _interestWidget = Wrap(
+            direction: Axis.horizontal,
+            spacing: 3,
+            runSpacing: -10,
+            children: list);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    _getInterests(widget.id);
     return Card(
       margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
         children: <Widget>[
           ListTile(
             leading: FlutterLogo(size: 72.0),
-            title: Text(title),
+            title: Text(widget.title),
           ),
           Container(
             padding: EdgeInsets.only(
@@ -23,7 +57,7 @@ class ProjectCard extends StatelessWidget {
               right: 10,
               bottom: 10,
             ),
-            child: Text(desc),
+            child: Text(widget.desc),
           ),
           Divider(
             indent: 10,
@@ -31,7 +65,7 @@ class ProjectCard extends StatelessWidget {
             height: 0,
             color: Colors.black,
           ),
-          interestsWidget,
+          _interestWidget,
           Divider(
             indent: 10,
             endIndent: 10,

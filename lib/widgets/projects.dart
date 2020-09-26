@@ -10,35 +10,6 @@ class Projects extends StatefulWidget {
 
 class _ProjectsState extends State<Projects> {
   final firestoreInstance = FirebaseFirestore.instance;
-  List<String> _interests = [];
-
-  Future<void> _getInterests(String projID) async {
-    await firestoreInstance
-        .collection("projectsinterests")
-        .where("project", isEqualTo: projID)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        _interests.add(element.data()["interest"]);
-      });
-    });
-  }
-
-  Widget _interestsWidget(List<String> ints) {
-    List<Widget> list = new List<Widget>();
-    for (var i = 0; i < ints.length; i++) {
-      list.add(
-        new Chip(
-          label: Text(ints[i]),
-        ),
-      );
-    }
-    return new Wrap(
-        direction: Axis.horizontal,
-        spacing: 3,
-        runSpacing: -10,
-        children: list);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,13 +23,10 @@ class _ProjectsState extends State<Projects> {
             itemBuilder: (ctx, index) {
               DocumentSnapshot ds = snapshot.data.documents[index];
               var data = ds.data();
-              _getInterests(ds.id);
-              Widget test = _interestsWidget(_interests);
-              _interests = [];
               return ProjectCard(
                 data["name"],
                 data["description"],
-                test,
+                ds.id,
               );
             },
           );
