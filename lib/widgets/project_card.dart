@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class ProjectCard extends StatelessWidget {
   final String title;
   final String desc;
-  final List<String> interests;
+  final Widget interestsWidget;
 
-  ProjectCard(this.title, this.desc, this.interests);
+  ProjectCard(this.title, this.desc, this.interestsWidget);
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +31,7 @@ class ProjectCard extends StatelessWidget {
             height: 0,
             color: Colors.black,
           ),
-          ButtonBar(
-            alignment: MainAxisAlignment.start,
-            children: [
-              for (var interest in interests)
-                RaisedButton(
-                  disabledColor: Colors.teal,
-                  child: Text(
-                    interest,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-            ],
-          ),
+          interestsWidget,
           Divider(
             indent: 10,
             endIndent: 10,

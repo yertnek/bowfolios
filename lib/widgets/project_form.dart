@@ -1,12 +1,13 @@
-import 'dart:async';
-
-import 'package:bowfolios/screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
+import 'dart:io';
+import 'dart:async';
+
+import 'package:bowfolios/screens/home_screen.dart';
 
 class ProjectForm extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _ProjectFormState extends State<ProjectForm> {
   String _name;
   String _homePage;
   String _desc;
+  var _interests = [];
 
   final FirebaseStorage _storage =
       FirebaseStorage(storageBucket: 'gs://bowfolios-2b23c.appspot.com');
@@ -33,12 +35,6 @@ class _ProjectFormState extends State<ProjectForm> {
           content: Text("Would you like to use the camera or gallery?"),
           actions: <Widget>[
             FlatButton(
-              child: Text("Cancel"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
               child: Text("Camera"),
               onPressed: () {
                 _pickImage(ImageSource.camera);
@@ -49,6 +45,12 @@ class _ProjectFormState extends State<ProjectForm> {
               child: Text("Gallery"),
               onPressed: () {
                 _pickImage(ImageSource.gallery);
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text("Cancel"),
+              onPressed: () {
                 Navigator.pop(context);
               },
             ),
@@ -67,33 +69,88 @@ class _ProjectFormState extends State<ProjectForm> {
     });
   }
 
+  Widget _multiSelectInterest() {
+    return FutureBuilder(
+      future: FirebaseFirestore.instance.collection("interests").get(),
+      builder: (ctx, snapshot) {
+        if (snapshot.hasData) {
+          var source = [];
+          for (var i = 0; i < snapshot.data.documents.length; i++) {
+            DocumentSnapshot ds = snapshot.data.documents[i];
+            var data = ds.data();
+            source.add(
+              {
+                "display": data["interest"],
+                "value": data["interest"],
+              },
+            );
+          }
+
+          return MultiSelectFormField(
+              autovalidate: false,
+              chipBackGroundColor: Colors.green,
+              chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+              dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
+              dialogShapeBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
+              title: Text("interest"),
+              dataSource: source,
+              textField: 'display',
+              valueField: 'value',
+              initialValue: _interests,
+              onSaved: (value) {
+                if (value == null) return;
+                setState(() {
+                  _interests = value;
+                });
+              });
+        }
+        return Text("No data");
+      },
+    );
+  }
+
   void _startUpload() async {
+    String projID;
     if (_formKey.currentState.validate() && _pickedImage != null) {
       String filePath = 'images/${DateTime.now()}.png';
-      setState(() {
-        _uploadTask = _storage.ref().child(filePath).putFile(_pickedImage);
-      });
 
       await FirebaseFirestore.instance.collection('projects').add(
         {
-          "Name": _name,
-          "Home Page": _homePage,
-          "Description": _desc,
-          "Picture": filePath
+          "name": _name,
+          "home Page": _homePage,
+          "description": _desc,
+          "picture": filePath,
+          "created": DateTime.now()
+        },
+      ).then(
+        (value) {
+          projID = value.id;
         },
       );
-    }
-    await _uploadTask.onComplete;
-    Timer(
-      Duration(seconds: 3),
-      () => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) {
-            return HomeScreen();
+      for (var i = 0; i < _interests.length; i++) {
+        await FirebaseFirestore.instance.collection('projectsinterests').add(
+          {
+            "project": projID,
+            "interest": _interests[i],
           },
+        );
+      }
+      setState(() {
+        _uploadTask = _storage.ref().child(filePath).putFile(_pickedImage);
+      });
+      await _uploadTask.onComplete;
+      Timer(
+        Duration(seconds: 3),
+        () => Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) {
+              return HomeScreen();
+            },
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override
@@ -120,77 +177,85 @@ class _ProjectFormState extends State<ProjectForm> {
         },
       );
     } else {
-      return Container(
-        height: double.infinity,
-        padding: EdgeInsets.all(15),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Project Name',
-                ),
-                // The validator receives the text that the user has entered.
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter the name of the project';
-                  }
-                  setState(() {
-                    _name = value;
-                  });
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: "Description",
-                ),
-                keyboardType: TextInputType.multiline,
-                minLines: 3,
-                maxLines: 5,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter a description for the project';
-                  }
-                  setState(() {
-                    _desc = value;
-                  });
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: "Homepage Link",
-                  hintText: 'https://bowfolios.github.io',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter link for the project';
-                  }
-                  setState(() {
-                    _homePage = value;
-                  });
-                },
-              ),
-              Row(
-                children: <Widget>[
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage:
-                        _pickedImage != null ? FileImage(_pickedImage) : null,
+      return SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Form(
+            key: _formKey,
+            child: Wrap(
+              spacing: 20,
+              runSpacing: 20,
+              children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Project Name',
                   ),
-                  FlatButton.icon(
-                    textColor: Theme.of(context).secondaryHeaderColor,
-                    onPressed: () => _showAlertDialog(context),
-                    icon: Icon(Icons.image),
-                    label: Text('Add Image'),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter the name of the project';
+                    }
+                    setState(() {
+                      _name = value;
+                    });
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Description",
                   ),
-                ],
-              ),
-              RaisedButton(
-                onPressed: _startUpload,
-                child: Text('Submit'),
-              ),
-            ],
+                  keyboardType: TextInputType.multiline,
+                  minLines: 3,
+                  maxLines: 5,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter a description for the project';
+                    }
+                    setState(() {
+                      _desc = value;
+                    });
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Homepage Link",
+                    hintText: 'https://bowfolios.github.io',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter link for the project';
+                    }
+                    setState(() {
+                      _homePage = value;
+                    });
+                  },
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage:
+                          _pickedImage != null ? FileImage(_pickedImage) : null,
+                    ),
+                    FlatButton.icon(
+                      textColor: Theme.of(context).secondaryHeaderColor,
+                      onPressed: () => _showAlertDialog(context),
+                      icon: Icon(Icons.image),
+                      label: Text('Add Image'),
+                    ),
+                  ],
+                ),
+                _multiSelectInterest(),
+                Center(
+                  child: RaisedButton(
+                    onPressed: _startUpload,
+                    child: Text('Submit'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

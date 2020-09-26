@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:bowfolios/widgets/main_drawer.dart';
 import 'package:bowfolios/widgets/profiles.dart';
@@ -11,6 +13,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final firestoreInstance = FirebaseFirestore.instance;
+
+  String username;
+
   final List<Widget> _pages = [
     Profiles(),
     Projects(),
@@ -31,14 +38,29 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _username() async {
+    await firestoreInstance
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .get()
+        .then(
+      (value) {
+        setState(() {
+          username = value.data()['username'];
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    _username();
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
         title: Text(headers[_selectedPageIndex]),
       ),
-      drawer: MainDrawer(),
+      drawer: MainDrawer(username: username),
       body: _pages[_selectedPageIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,

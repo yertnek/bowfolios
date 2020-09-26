@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import '../screens/auth_screen.dart';
 import 'package:bowfolios/screens/home_screen.dart';
 import 'package:bowfolios/screens/add_project_screen.dart';
-import './username.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +13,9 @@ void main() async {
 }
 
 class MainDrawer extends StatefulWidget {
+  final String username;
+
+  const MainDrawer({Key key, this.username}) : super(key: key);
   @override
   _MainDrawerState createState() => _MainDrawerState();
 }
@@ -84,7 +86,13 @@ class _MainDrawerState extends State<MainDrawer> {
               padding: EdgeInsets.all(20),
               alignment: Alignment.bottomLeft,
               color: Theme.of(context).primaryColor,
-              child: Username(auth.currentUser.uid),
+              child: Text(
+                widget.username,
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 30,
+                ),
+              ),
             ),
             buildListTile('Home', Icons.home, () {
               newPage(context, HomeScreen());
