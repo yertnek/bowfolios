@@ -22,6 +22,7 @@ class _ProjectFormState extends State<ProjectForm> {
   String _homePage;
   String _desc;
   var _interests = [];
+  var _users = [];
 
   void _showAlertDialog(BuildContext context) async {
     return showDialog(
@@ -90,11 +91,19 @@ class _ProjectFormState extends State<ProjectForm> {
               dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
               dialogShapeBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
-              title: Text("interest"),
+              title: Text("Interests"),
               dataSource: source,
               textField: 'display',
               valueField: 'value',
               initialValue: _interests,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter one or more interests';
+                }
+                setState(() {
+                  _interests = value;
+                });
+              },
               onSaved: (value) {
                 if (value == null) return;
                 setState(() {
@@ -107,12 +116,61 @@ class _ProjectFormState extends State<ProjectForm> {
     );
   }
 
+  Widget _multiSelectProfiles() {
+    return FutureBuilder(
+      future: FirebaseFirestore.instance.collection("users").get(),
+      builder: (ctx, snapshot) {
+        if (snapshot.hasData) {
+          var source = [];
+          for (var i = 0; i < snapshot.data.documents.length; i++) {
+            DocumentSnapshot ds = snapshot.data.documents[i];
+            var data = ds.data();
+            source.add(
+              {
+                "display": data["username"],
+                "value": ds.id,
+              },
+            );
+          }
+
+          return MultiSelectFormField(
+              autovalidate: false,
+              chipBackGroundColor: Colors.green,
+              chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+              dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
+              dialogShapeBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
+              title: Text("Profiles"),
+              dataSource: source,
+              textField: 'display',
+              valueField: 'value',
+              initialValue: _users,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please select one or more profiles';
+                }
+                setState(() {
+                  _users = value;
+                });
+              },
+              onSaved: (value) {
+                if (value == null) return;
+                setState(() {
+                  _users = value;
+                });
+              });
+        }
+        return Text("No data");
+      },
+    );
+  }
+
   void _startUpload() async {
-    setState(() {
-      _uploading = true;
-    });
     String projID;
     if (_formKey.currentState.validate() && _pickedImage != null) {
+      setState(() {
+        _uploading = true;
+      });
       final ref = FirebaseStorage.instance
           .ref()
           .child('project_image')
@@ -142,18 +200,21 @@ class _ProjectFormState extends State<ProjectForm> {
             "interest": _interests[i],
           },
         );
+        await FirebaseFirestore.instance.collection('profilesprojects').add(
+          {
+            "project": projID,
+            "profile": _users[i],
+          },
+        );
       }
-
-      Timer(
-        Duration(seconds: 3),
-        () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) {
-              return HomeScreen();
-            },
-          ),
-        ),
-      );
+      setState(() {
+        _uploading = false;
+      });
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (_) {
+          return HomeScreen();
+        },
+      ));
     }
   }
 
@@ -231,6 +292,7 @@ class _ProjectFormState extends State<ProjectForm> {
                   ],
                 ),
                 _multiSelectInterest(),
+                _multiSelectProfiles(),
                 Center(
                   child: RaisedButton(
                     onPressed: _startUpload,
