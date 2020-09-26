@@ -34,12 +34,12 @@ class ProfileCard extends StatelessWidget {
             alignment: MainAxisAlignment.start,
             children: [
               for (var interest in interests)
-                RaisedButton(
-                  disabledColor: Colors.teal,
-                  child: Text(
+                Chip(
+                  label: Text(
                     interest,
                     style: TextStyle(color: Colors.white),
                   ),
+                  backgroundColor: Colors.teal,
                 ),
             ],
           ),

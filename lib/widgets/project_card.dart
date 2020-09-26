@@ -5,8 +5,9 @@ class ProjectCard extends StatefulWidget {
   final String title;
   final String desc;
   final String id;
+  final String imageURL;
 
-  ProjectCard(this.title, this.desc, this.id);
+  ProjectCard(this.title, this.desc, this.imageURL, this.id);
 
   @override
   _ProjectCardState createState() => _ProjectCardState();
@@ -26,7 +27,11 @@ class _ProjectCardState extends State<ProjectCard> {
       value.docs.forEach((element) {
         list.add(
           new Chip(
-            label: Text(element.data()["interest"]),
+            label: Text(
+              element.data()["interest"],
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.teal,
           ),
         );
       });
@@ -48,7 +53,9 @@ class _ProjectCardState extends State<ProjectCard> {
       child: Column(
         children: <Widget>[
           ListTile(
-            leading: FlutterLogo(size: 72.0),
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(widget.imageURL),
+            ),
             title: Text(widget.title),
           ),
           Container(

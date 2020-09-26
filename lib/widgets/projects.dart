@@ -26,6 +26,7 @@ class _ProjectsState extends State<Projects> {
               return ProjectCard(
                 data["name"],
                 data["description"],
+                data["picture"],
                 ds.id,
               );
             },
