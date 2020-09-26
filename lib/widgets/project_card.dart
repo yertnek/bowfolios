@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 class ProjectCard extends StatefulWidget {
   final String title;
   final String desc;
-  final Widget widget;
+  final String id;
 
-  ProjectCard(this.title, this.desc, this.widget);
+  ProjectCard(this.title, this.desc, this.id);
 
   @override
   _ProjectCardState createState() => _ProjectCardState();
@@ -14,9 +14,35 @@ class ProjectCard extends StatefulWidget {
 
 class _ProjectCardState extends State<ProjectCard> {
   final firestoreInstance = FirebaseFirestore.instance;
+  Widget _interestWidget = Icon(Icons.inbox);
+
+  void _getInterests(String projID) async {
+    List<Widget> list = new List<Widget>();
+    await firestoreInstance
+        .collection("projectsinterests")
+        .where("project", isEqualTo: projID)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        list.add(
+          new Chip(
+            label: Text(element.data()["interest"]),
+          ),
+        );
+      });
+      setState(() {
+        _interestWidget = Wrap(
+            direction: Axis.horizontal,
+            spacing: 3,
+            runSpacing: -10,
+            children: list);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    _getInterests(widget.id);
     return Card(
       margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
@@ -39,7 +65,7 @@ class _ProjectCardState extends State<ProjectCard> {
             height: 0,
             color: Colors.black,
           ),
-          widget,
+          _interestWidget,
           Divider(
             indent: 10,
             endIndent: 10,
