@@ -23,10 +23,30 @@ class _ProjectsState extends State<Projects> {
             itemBuilder: (ctx, index) {
               DocumentSnapshot ds = snapshot.data.documents[index];
               var data = ds.data();
+              List<Widget> list = new List<Widget>();
+              Widget _interestWidget;
+              firestoreInstance
+                  .collection("projectsinterests")
+                  .where("project", isEqualTo: ds.id)
+                  .get()
+                  .then((value) {
+                value.docs.forEach((element) {
+                  list.add(
+                    new Chip(
+                      label: Text(element.data()["interest"]),
+                    ),
+                  );
+                });
+                _interestWidget = Wrap(
+                    direction: Axis.horizontal,
+                    spacing: 3,
+                    runSpacing: -10,
+                    children: list);
+              });
               return ProjectCard(
                 data["name"],
                 data["description"],
-                ds.id,
+                _interestWidget,
               );
             },
           );
