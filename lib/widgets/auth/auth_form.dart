@@ -34,7 +34,8 @@ class _AuthFormState extends State<AuthForm> {
   var _lastName = '';
   var _bio = '';
   var _title = '';
-  var _picture = '';
+  var _picture =
+      'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png';
 
   void _trySubmit() {
     final isValid = _formKey.currentState.validate();

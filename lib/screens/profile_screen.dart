@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bowfolios/widgets/main_drawer.dart';
-import 'package:bowfolios/widgets/project_form.dart';
+import 'package:bowfolios/widgets/profile_form.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -42,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       drawer: MainDrawer(
         username: username,
       ),
-      body: ProjectForm(),
+      body: ProfileForm(),
     );
   }
 }
