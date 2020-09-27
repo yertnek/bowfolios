@@ -15,6 +15,7 @@ class AuthForm extends StatefulWidget {
     String lastName,
     String bio,
     String title,
+    String picture,
     bool isLogin,
     BuildContext ctx,
   ) submitFn;
@@ -33,6 +34,7 @@ class _AuthFormState extends State<AuthForm> {
   var _lastName = '';
   var _bio = '';
   var _title = '';
+  var _picture = '';
 
   void _trySubmit() {
     final isValid = _formKey.currentState.validate();
@@ -49,6 +51,7 @@ class _AuthFormState extends State<AuthForm> {
         _lastName.trim(),
         _bio.trim(),
         _title.trim(),
+        _picture.trim(),
         _isLogin,
         context,
       );
