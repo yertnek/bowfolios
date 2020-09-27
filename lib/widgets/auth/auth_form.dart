@@ -101,32 +101,34 @@ class _AuthFormState extends State<AuthForm> {
                         _userName = value;
                       },
                     ),
-                  TextFormField(
-                    key: ValueKey('firstName'),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter a first name.';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(labelText: 'First Name'),
-                    onSaved: (value) {
-                      _firstName = value;
-                    },
-                  ),
-                  TextFormField(
-                    key: ValueKey('lastName'),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter a last name.';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(labelText: 'Last Name'),
-                    onSaved: (value) {
-                      _firstName = value;
-                    },
-                  ),
+                  if (!_isLogin)
+                    TextFormField(
+                      key: ValueKey('firstName'),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter a first name.';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(labelText: 'First Name'),
+                      onSaved: (value) {
+                        _firstName = value;
+                      },
+                    ),
+                  if (!_isLogin)
+                    TextFormField(
+                      key: ValueKey('lastName'),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter a last name.';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(labelText: 'Last Name'),
+                      onSaved: (value) {
+                        _lastName = value;
+                      },
+                    ),
                   TextFormField(
                     key: ValueKey('password'),
                     validator: (value) {
