@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'dart:io';
-import 'dart:async';
 
 import 'package:bowfolios/screens/home_screen.dart';
 
@@ -183,7 +182,7 @@ class _ProjectFormState extends State<ProjectForm> {
       await FirebaseFirestore.instance.collection('projects').add(
         {
           "name": _name,
-          "home Page": _homePage,
+          "home page": _homePage,
           "description": _desc,
           "picture": url,
           "created": DateTime.now()
@@ -200,6 +199,8 @@ class _ProjectFormState extends State<ProjectForm> {
             "interest": _interests[i],
           },
         );
+      }
+      for (var i = 0; i < _users.length; i++) {
         await FirebaseFirestore.instance.collection('profilesprojects').add(
           {
             "project": projID,
