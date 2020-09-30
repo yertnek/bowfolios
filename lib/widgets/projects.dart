@@ -17,6 +17,7 @@ class _ProjectsState extends State<Projects> {
       stream: FirebaseFirestore.instance.collection("projects").snapshots(),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState != ConnectionState.waiting) {
+          if (snapshot.data == null) return Text("There is no data");
           return ListView.builder(
             padding: EdgeInsets.all(15),
             itemCount: snapshot.data.documents.length,

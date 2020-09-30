@@ -10,6 +10,7 @@ class Interests extends StatelessWidget {
       stream: FirebaseFirestore.instance.collection("interests").snapshots(),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState != ConnectionState.waiting) {
+          if (snapshot.data == null) return Text("There is no data");
           return GridView.builder(
             padding: const EdgeInsets.all(25),
             itemCount: snapshot.data.documents.length,
