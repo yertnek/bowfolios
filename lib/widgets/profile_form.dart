@@ -110,7 +110,7 @@ class _ProfileFormState extends State<ProfileForm> {
           "title": _title,
         },
       );
-      for (var i = 0; i < _interests.length; i++) {
+      /*for (var i = 0; i < _interests.length; i++) {
         try {
           FirebaseFirestore.instance.collection('profilesinterest').where({
             "profile": userID,
@@ -125,7 +125,7 @@ class _ProfileFormState extends State<ProfileForm> {
             },
           );
         }
-      }
+      }*/
       setState(() {
         _uploading = false;
       });
@@ -224,6 +224,24 @@ class _ProfileFormState extends State<ProfileForm> {
               spacing: 20,
               runSpacing: 20,
               children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: _pickedImage != null
+                          ? FileImage(_pickedImage)
+                          : NetworkImage(_picture),
+                    ),
+                    FlatButton.icon(
+                      textColor: Theme.of(context).secondaryHeaderColor,
+                      onPressed: () => _showAlertDialog(context),
+                      icon: Icon(Icons.image),
+                      label: Text('Add Image'),
+                    ),
+                  ],
+                ),
                 TextFormField(
                   controller: _firstNameControl,
                   decoration: InputDecoration(
@@ -289,7 +307,7 @@ class _ProfileFormState extends State<ProfileForm> {
                     });
                   },
                 ),
-                Row(
+                /*Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -306,7 +324,7 @@ class _ProfileFormState extends State<ProfileForm> {
                       label: Text('Add Image'),
                     ),
                   ],
-                ),
+                ),*/
                 _multiSelectInterest(),
                 Center(
                   child: RaisedButton(
