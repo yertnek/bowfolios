@@ -11,6 +11,11 @@ class AuthForm extends StatefulWidget {
     String email,
     String password,
     String userName,
+    String firstName,
+    String lastName,
+    String bio,
+    String title,
+    String picture,
     bool isLogin,
     BuildContext ctx,
   ) submitFn;
@@ -25,6 +30,12 @@ class _AuthFormState extends State<AuthForm> {
   var _userEmail = '';
   var _userName = '';
   var _userPassword = '';
+  var _firstName = '';
+  var _lastName = '';
+  var _bio = '';
+  var _title = '';
+  var _picture =
+      'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png';
 
   void _trySubmit() {
     final isValid = _formKey.currentState.validate();
@@ -37,6 +48,11 @@ class _AuthFormState extends State<AuthForm> {
         _userEmail.trim(),
         _userPassword.trim(),
         _userName.trim(),
+        _firstName.trim(),
+        _lastName.trim(),
+        _bio.trim(),
+        _title.trim(),
+        _picture.trim(),
         _isLogin,
         context,
       );
@@ -87,6 +103,34 @@ class _AuthFormState extends State<AuthForm> {
                       decoration: InputDecoration(labelText: 'Username'),
                       onSaved: (value) {
                         _userName = value;
+                      },
+                    ),
+                  if (!_isLogin)
+                    TextFormField(
+                      key: ValueKey('firstName'),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter a first name.';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(labelText: 'First Name'),
+                      onSaved: (value) {
+                        _firstName = value;
+                      },
+                    ),
+                  if (!_isLogin)
+                    TextFormField(
+                      key: ValueKey('lastName'),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter a last name.';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(labelText: 'Last Name'),
+                      onSaved: (value) {
+                        _lastName = value;
                       },
                     ),
                   TextFormField(

@@ -1,8 +1,10 @@
+import 'package:bowfolios/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import '../screens/auth_screen.dart';
+import '../screens/profile_screen.dart';
 import 'package:bowfolios/screens/home_screen.dart';
 import 'package:bowfolios/screens/add_project_screen.dart';
 
@@ -97,7 +99,9 @@ class _MainDrawerState extends State<MainDrawer> {
             buildListTile('Home', Icons.home, () {
               newPage(context, HomeScreen());
             }),
-            buildListTile('Profile', Icons.person, () {}),
+            buildListTile('Profile', Icons.person, () {
+              newPage(context, ProfileScreen());
+            }),
             buildListTile('Add Project', Icons.add, () {
               newPage(context, AddProjectScreen());
             }),
