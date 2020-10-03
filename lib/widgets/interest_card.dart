@@ -10,6 +10,8 @@ class InterestCard extends StatelessWidget {
 
   void selectInterest(BuildContext ctx) async {
     List<String> userIDs = new List<String>();
+    List<String> projIDs = new List<String>();
+
     await firestoreInstance
         .collection("profilesinterest")
         .where("interest", isEqualTo: interest)
@@ -21,10 +23,23 @@ class InterestCard extends StatelessWidget {
         });
       }
     });
+
+    await firestoreInstance
+        .collection("projectsinterests")
+        .where("interest", isEqualTo: interest)
+        .get()
+        .then((value) {
+      if (value.docs.length != 0) {
+        value.docs.forEach((element) async {
+          projIDs.add(element.data()["project"]);
+        });
+      }
+    });
+
     Navigator.of(ctx).push(
       MaterialPageRoute(
         builder: (_) {
-          return InterestsScreen(interest, userIDs);
+          return InterestsScreen(interest, userIDs, projIDs);
         },
       ),
     );
