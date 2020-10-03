@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:bowfolios/widgets/category_info.dart';
+
 class InterestsScreen extends StatelessWidget {
   final String interestName;
 
@@ -11,9 +13,7 @@ class InterestsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(interestName),
       ),
-      body: Center(
-        child: Text('Info for the category'),
-      ),
+      body: CategoryInfo(interestName),
     );
   }
 }
