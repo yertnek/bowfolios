@@ -15,7 +15,7 @@ class _CategoryInfoState extends State<CategoryInfo> {
   final firestoreInstance = FirebaseFirestore.instance;
   Widget _profileWidget = Icon(Icons.inbox);
 
-  void _getProfiles(String interest) async {
+  void _getProfiles() async {
     List<Widget> list = new List<Widget>();
     if (widget.userIDs.length != 0) {
       for (var i = 0; i < widget.userIDs.length; i++) {
@@ -47,7 +47,7 @@ class _CategoryInfoState extends State<CategoryInfo> {
 
   @override
   Widget build(BuildContext context) {
-    _getProfiles(widget.interestName);
+    _getProfiles();
     return Column(
       children: <Widget>[
         Text("Profiles"),
@@ -57,6 +57,12 @@ class _CategoryInfoState extends State<CategoryInfo> {
           endIndent: 10,
         ),
         _profileWidget,
+        Text("Projects"),
+        Divider(
+          color: Colors.black,
+          indent: 10,
+          endIndent: 10,
+        ),
       ],
     );
   }

@@ -9,33 +9,25 @@ class InterestCard extends StatelessWidget {
   InterestCard(this.interest);
 
   void selectInterest(BuildContext ctx) async {
+    List<String> userIDs = new List<String>();
     await firestoreInstance
         .collection("profilesinterest")
         .where("interest", isEqualTo: interest)
         .get()
         .then((value) {
-      if (value.docs.length == 0) {
-        Navigator.of(ctx).push(
-          MaterialPageRoute(
-            builder: (_) {
-              return InterestsScreen(interest, []);
-            },
-          ),
-        );
-      } else {
-        List<String> userIDs = new List<String>();
+      if (value.docs.length != 0) {
         value.docs.forEach((element) async {
           userIDs.add(element.data()["profile"]);
         });
-        Navigator.of(ctx).push(
-          MaterialPageRoute(
-            builder: (_) {
-              return InterestsScreen(interest, userIDs);
-            },
-          ),
-        );
       }
     });
+    Navigator.of(ctx).push(
+      MaterialPageRoute(
+        builder: (_) {
+          return InterestsScreen(interest, userIDs);
+        },
+      ),
+    );
   }
 
   @override
