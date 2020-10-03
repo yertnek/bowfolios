@@ -4,8 +4,9 @@ import 'package:bowfolios/widgets/category_info.dart';
 
 class InterestsScreen extends StatelessWidget {
   final String interestName;
+  final List<String> userIDs;
 
-  InterestsScreen(this.interestName);
+  InterestsScreen(this.interestName, this.userIDs);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class InterestsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(interestName),
       ),
-      body: CategoryInfo(interestName),
+      body: CategoryInfo(interestName, userIDs),
     );
   }
 }

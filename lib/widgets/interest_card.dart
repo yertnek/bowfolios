@@ -1,19 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:bowfolios/screens/interests_screen.dart';
 
 class InterestCard extends StatelessWidget {
   final String interest;
-
+  final firestoreInstance = FirebaseFirestore.instance;
   InterestCard(this.interest);
 
-  void selectInterest(BuildContext ctx) {
-    Navigator.of(ctx).push(
-      MaterialPageRoute(
-        builder: (_) {
-          return InterestsScreen(interest);
-        },
-      ),
-    );
+  void selectInterest(BuildContext ctx) async {
+    await firestoreInstance
+        .collection("profilesinterest")
+        .where("interest", isEqualTo: interest)
+        .get()
+        .then((value) {
+      if (value.docs.length == 0) {
+        Navigator.of(ctx).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return InterestsScreen(interest, []);
+            },
+          ),
+        );
+      } else {
+        List<String> userIDs = new List<String>();
+        value.docs.forEach((element) async {
+          userIDs.add(element.data()["profile"]);
+        });
+        Navigator.of(ctx).push(
+          MaterialPageRoute(
+            builder: (_) {
+              return InterestsScreen(interest, userIDs);
+            },
+          ),
+        );
+      }
+    });
   }
 
   @override
