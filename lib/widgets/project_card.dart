@@ -15,13 +15,17 @@ class ProjectCard extends StatefulWidget {
 
 class _ProjectCardState extends State<ProjectCard> {
   final firestoreInstance = FirebaseFirestore.instance;
-  Widget _interestWidget = Icon(Icons.inbox);
+  Widget _interestWidget = CircularProgressIndicator();
+  Widget _profileWidget = CircularProgressIndicator();
 
-  void _getInterests(String projID) async {
+  void _getWidgets() async {
     List<Widget> list = new List<Widget>();
+    List<Widget> proflist = new List<Widget>();
+    List<String> userIDs = new List<String>();
+
     await firestoreInstance
         .collection("projectsinterests")
-        .where("project", isEqualTo: projID)
+        .where("project", isEqualTo: widget.id)
         .get()
         .then((value) {
       value.docs.forEach((element) {
@@ -43,11 +47,56 @@ class _ProjectCardState extends State<ProjectCard> {
             children: list);
       });
     });
+
+    await firestoreInstance
+        .collection("profilesprojects")
+        .where("project", isEqualTo: widget.id)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        userIDs.add(element.data()["profile"]);
+      });
+    });
+
+    if (userIDs.length != 0) {
+      for (var i = 0; i < userIDs.length; i++) {
+        await firestoreInstance
+            .collection("users")
+            .doc(userIDs[i])
+            .get()
+            .then((value) {
+          String profImg = value.data()["picture"];
+          proflist.add(
+            new CircleAvatar(
+              backgroundImage: NetworkImage(profImg),
+            ),
+          );
+        });
+      }
+    } else {
+      proflist.add(
+        new Text("No profiles associated with this interst"),
+      );
+    }
+
+    setState(() {
+      _profileWidget = Wrap(
+        direction: Axis.horizontal,
+        spacing: 3,
+        runSpacing: -10,
+        children: proflist,
+      );
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getWidgets();
   }
 
   @override
   Widget build(BuildContext context) {
-    _getInterests(widget.id);
     return Card(
       margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
@@ -79,18 +128,9 @@ class _ProjectCardState extends State<ProjectCard> {
             height: 0,
             color: Colors.black,
           ),
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10),
-                child: Image(
-                  height: 50,
-                  width: 50,
-                  image: NetworkImage(
-                      'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                ),
-              ),
-            ],
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: _profileWidget,
           ),
         ],
       ),

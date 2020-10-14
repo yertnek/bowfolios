@@ -14,8 +14,8 @@ class CategoryInfo extends StatefulWidget {
 
 class _CategoryInfoState extends State<CategoryInfo> {
   final firestoreInstance = FirebaseFirestore.instance;
-  Widget _profileWidget = Icon(Icons.inbox);
-  Widget _projectWidget = Icon(Icons.inbox);
+  Widget _profileWidget = CircularProgressIndicator();
+  Widget _projectWidget = CircularProgressIndicator();
 
   void _getWidgets() async {
     List<Widget> proflist = new List<Widget>();
