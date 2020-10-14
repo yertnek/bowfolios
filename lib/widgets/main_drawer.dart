@@ -1,4 +1,3 @@
-import 'package:bowfolios/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,6 +6,8 @@ import '../screens/auth_screen.dart';
 import '../screens/profile_screen.dart';
 import 'package:bowfolios/screens/home_screen.dart';
 import 'package:bowfolios/screens/add_project_screen.dart';
+import 'package:bowfolios/screens/search_screen.dart';
+import 'package:bowfolios/screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -105,7 +106,9 @@ class _MainDrawerState extends State<MainDrawer> {
             buildListTile('Add Project', Icons.add, () {
               newPage(context, AddProjectScreen());
             }),
-            buildListTile('Search', Icons.search, () {}),
+            buildListTile('Search', Icons.search, () {
+              newPage(context, SearchScreen());
+            }),
             buildListTile('Logout', Icons.exit_to_app, () {
               logout(context);
             }),
