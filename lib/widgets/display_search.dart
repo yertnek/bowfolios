@@ -27,7 +27,9 @@ class _DisplaySearchState extends State<DisplaySearch> {
           .then((value) {
         if (value.docs.length != 0) {
           value.docs.forEach((element) async {
-            userIDs.add(element.data()["profile"]);
+            if (!userIDs.contains(element.data()["profile"])) {
+              userIDs.add(element.data()["profile"]);
+            }
           });
         }
       });
