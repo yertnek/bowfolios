@@ -1,3 +1,4 @@
+import 'package:bowfolios/widgets/profile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -45,10 +46,14 @@ class _DisplaySearchState extends State<DisplaySearch> {
             .doc(_users[i])
             .get()
             .then((value) {
-          String profImg = value.data()["picture"];
+          var data = value.data();
+          var name = data["firstName"] + " " + data["lastName"];
           proflist.add(
-            new CircleAvatar(
-              backgroundImage: NetworkImage(profImg),
+            new ProfileCard(
+              name,
+              data["bio"],
+              data["picture"],
+              value.id,
             ),
           );
         });
@@ -60,11 +65,14 @@ class _DisplaySearchState extends State<DisplaySearch> {
     }
 
     setState(() {
-      _profileWidget = Wrap(
-        direction: Axis.horizontal,
-        spacing: 3,
-        runSpacing: -10,
-        children: proflist,
+      _profileWidget = Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Wrap(
+          direction: Axis.horizontal,
+          spacing: 3,
+          runSpacing: -10,
+          children: proflist,
+        ),
       );
     });
   }
