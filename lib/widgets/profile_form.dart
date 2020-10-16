@@ -66,6 +66,7 @@ class _ProfileFormState extends State<ProfileForm> {
     );
   }
 
+  //gets image for profile picture
   void _pickImage(ImageSource opt) async {
     final picker = ImagePicker();
     final pickedImage = await picker.getImage(source: opt);
@@ -75,7 +76,9 @@ class _ProfileFormState extends State<ProfileForm> {
     });
   }
 
+  //function that uploads/updates all added information
   void _startUpload() async {
+    //get user id
     final userID = auth.currentUser.uid;
     if (_formKey.currentState.validate()) {
       setState(() {
@@ -88,7 +91,7 @@ class _ProfileFormState extends State<ProfileForm> {
             .child('${DateTime.now()}.jpg');
 
         await ref.putFile(_pickedImage).onComplete;
-
+        //update/upload picture url
         final url = await ref.getDownloadURL();
         await FirebaseFirestore.instance
             .collection('users')
@@ -99,6 +102,7 @@ class _ProfileFormState extends State<ProfileForm> {
           },
         );
       }
+      //update first & last name, bio, title
       await FirebaseFirestore.instance
           .collection('users')
           .doc(auth.currentUser.uid)
@@ -110,22 +114,15 @@ class _ProfileFormState extends State<ProfileForm> {
           "title": _title,
         },
       );
-      /*for (var i = 0; i < _interests.length; i++) {
-        try {
-          FirebaseFirestore.instance.collection('profilesinterest').where({
+      //upload selected interests
+      for (var i = 0; i < _interests.length; i++) {
+        await FirebaseFirestore.instance.collection('profilesinterest').add(
+          {
             "profile": userID,
             "interest": _interests[i],
-          }).get();
-        } catch (err) {
-          print(err);
-          await FirebaseFirestore.instance.collection('profilesinterest').add(
-            {
-              "profile": userID,
-              "interest": _interests[i],
-            },
-          );
-        }
-      }*/
+          },
+        );
+      }
       setState(() {
         _uploading = false;
       });
