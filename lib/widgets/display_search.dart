@@ -20,13 +20,16 @@ class _DisplaySearchState extends State<DisplaySearch> {
     List<String> userIDs = new List<String>();
 
     for (var i = 0; i < widget._interests.length; i++) {
+      //get user id with the same interest as selected ones
       await firestoreInstance
           .collection("profilesinterest")
           .where("interest", isEqualTo: widget._interests[i])
           .get()
           .then((value) {
+        //if there are user ids with same interests
         if (value.docs.length != 0) {
           value.docs.forEach((element) async {
+            //add profile data only if it does not exist in userIDs list
             if (!userIDs.contains(element.data()["profile"])) {
               userIDs.add(element.data()["profile"]);
             }
