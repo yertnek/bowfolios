@@ -55,7 +55,7 @@ class _DisplaySearchState extends State<DisplaySearch> {
       }
     } else {
       proflist.add(
-        new Text("No profiles associated with this interst"),
+        new Text("No profiles associated with this interest(s) selected"),
       );
     }
 

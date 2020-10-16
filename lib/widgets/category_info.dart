@@ -58,7 +58,7 @@ class _CategoryInfoState extends State<CategoryInfo> {
       }
     } else {
       projlist.add(
-        new Text("No projects associated with this interst"),
+        new Text("No projects associated with this interest"),
       );
     }
     setState(() {
